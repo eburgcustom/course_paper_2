@@ -1,5 +1,7 @@
+from typing import Any, Dict, List
+
 import requests
-from typing import Dict, List, Any
+
 from src.job_api import JobAPI
 
 
@@ -24,7 +26,7 @@ class HeadHunterAPI(JobAPI):
         except requests.exceptions.RequestException as e:
             raise ConnectionError(f"Ошибка подключения к hh.ru: {str(e)}")
 
-    def get_vacancies(self, search_query: str, **kwargs) -> List[Dict[str, Any]]:
+    def get_vacancies(self, search_query: str, **kwargs: Any) -> List[Dict[str, Any]]:
         """
         Получение списка вакансий по поисковому запросу
         :param search_query: Поисковый запрос
@@ -45,10 +47,10 @@ class HeadHunterAPI(JobAPI):
         try:
             response = requests.get(self.__base_url, params=params, timeout=10)
             response.raise_for_status()
-            
+
             vacancies = response.json().get("items", [])
             result = []
-            
+
             for v in vacancies:
                 salary = v.get("salary")
                 if salary:
@@ -57,7 +59,7 @@ class HeadHunterAPI(JobAPI):
                     salary_currency = salary.get('currency', 'RUR')
                 else:
                     salary_from = salary_to = salary_currency = None
-                
+
                 result.append({
                     "id": v.get("id"),
                     "name": v.get("name"),
@@ -70,8 +72,8 @@ class HeadHunterAPI(JobAPI):
                     "experience": v.get("experience", {}).get("name"),
                     "employment": v.get("employment", {}).get("name")
                 })
-            
+
             return result
-            
+
         except requests.exceptions.RequestException as e:
             raise ConnectionError(f"Ошибка при получении вакансий: {str(e)}")

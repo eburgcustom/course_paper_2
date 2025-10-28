@@ -14,7 +14,6 @@ def test_vacancy_creation():
         experience='От 3 до 6 лет',
         employment='Полная занятость'
     )
-    
     assert vacancy.name == 'Python Developer'
     assert vacancy.url == 'https://hh.ru/vacancy/12345'
     assert vacancy.salary_from == 100000
@@ -31,15 +30,15 @@ def test_salary_property():
     # Полный диапазон зарплат
     vacancy = Vacancy('Test', 'https://test.com', 100000, 150000, 'RUR')
     assert vacancy.salary == '100 000 - 150 000 RUR'
-    
+
     # Только зарплата "от"
     vacancy = Vacancy('Test', 'https://test.com', 100000, None, 'USD')
     assert vacancy.salary == 'от 100 000 USD'
-    
+
     # Только зарплата "до"
     vacancy = Vacancy('Test', 'https://test.com', None, 200000, 'EUR')
     assert vacancy.salary == 'до 200 000 EUR'
-    
+
     # Без зарплаты
     vacancy = Vacancy('Test', 'https://test.com')
     assert vacancy.salary == 'Зарплата не указана'
@@ -50,11 +49,11 @@ def test_comparison():
     v1 = Vacancy('Test1', 'https://test.com/1', 100000, 150000, 'RUR')
     v2 = Vacancy('Test2', 'https://test.com/2', 200000, 250000, 'RUR')
     v3 = Vacancy('Test1', 'https://test.com/1', 100000, 150000, 'RUR')
-    
+
     # Проверка равенства
     assert v1 == v3
     assert v1 != v2
-    
+
     # Проверка сравнения
     assert v2 > v1
     assert v1 < v2
@@ -68,7 +67,7 @@ def test_validation():
         assert False, "Должна быть ошибка валидации URL"
     except ValueError as e:
         assert "Некорректный URL" in str(e)
-    
+
     # Некорректная зарплата
     try:
         Vacancy('Test', 'https://test.com', salary_from='не число')
@@ -90,7 +89,7 @@ def test_from_dict():
         'experience': 'От 1 года',
         'employment': 'Полная занятость'
     }
-    
+
     vacancy = Vacancy.from_dict(data)
     assert vacancy.name == 'Python Developer'
     assert vacancy.url == 'https://hh.ru/vacancy/12345'
@@ -107,11 +106,10 @@ def test_to_dict():
         salary_to=150000,
         salary_currency='RUR'
     )
-    
+
     data = vacancy.to_dict()
     assert data['name'] == 'Python Developer'
     assert data['url'] == 'https://hh.ru/vacancy/12345'
     assert data['salary_from'] == 100000
     assert data['salary_to'] == 150000
     assert data['salary_currency'] == 'RUR'
-

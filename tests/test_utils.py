@@ -1,12 +1,8 @@
 import os
 import tempfile
-from src.utils import (
-    filter_vacancies,
-    get_vacancies_by_salary,
-    sort_vacancies,
-    get_top_vacancies,
-    save_vacancies_to_file
-)
+
+from src.utils import (filter_vacancies, get_top_vacancies, get_vacancies_by_salary, save_vacancies_to_file,
+                       sort_vacancies)
 
 # Тестовые данные
 TEST_VACANCIES = [

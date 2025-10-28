@@ -59,4 +59,3 @@ def test_add_and_get_vacancies():
         # Очистка
         if os.path.exists(temp_file):
             os.unlink(temp_file)
-

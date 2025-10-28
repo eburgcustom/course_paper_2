@@ -1,5 +1,6 @@
-from typing import List, Dict, Any
 import json
+from typing import Any, Dict, List
+
 from .models import Vacancy
 
 
@@ -12,7 +13,7 @@ def filter_vacancies(vacancies: List[Dict[str, Any]], filter_words: List[str]) -
     """
     if not filter_words:
         return vacancies
-    
+
     filtered_vacancies = []
     for vacancy in vacancies:
         # Объединяем все текстовые поля для поиска
@@ -23,11 +24,11 @@ def filter_vacancies(vacancies: List[Dict[str, Any]], filter_words: List[str]) -
             str(vacancy.get('experience', '')),
             str(vacancy.get('employment', ''))
         ]).lower()
-        
+
         # Проверяем, содержатся ли все ключевые слова в тексте
         if all(word.lower() in text_to_search for word in filter_words):
             filtered_vacancies.append(vacancy)
-    
+
     return filtered_vacancies
 
 
@@ -40,26 +41,26 @@ def get_vacancies_by_salary(vacancies: List[Dict[str, Any]], salary_range: str) 
     """
     if not salary_range:
         return vacancies
-    
+
     try:
         # Парсим диапазон зарплат
         salary_parts = salary_range.split('-')
         if len(salary_parts) != 2:
             return vacancies
-            
+
         min_salary, max_salary = map(int, salary_parts)
     except (ValueError, IndexError):
         return vacancies
-    
+
     filtered_vacancies = []
     for vacancy in vacancies:
         salary_from = vacancy.get('salary_from') or 0
         salary_to = vacancy.get('salary_to') or float('inf')
-        
+
         # Проверяем пересечение диапазонов
         if (salary_from <= max_salary) and (salary_to >= min_salary):
             filtered_vacancies.append(vacancy)
-    
+
     return filtered_vacancies
 
 
@@ -69,7 +70,7 @@ def sort_vacancies(vacancies: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     :param vacancies: Список вакансий
     :return: Отсортированный список вакансий
     """
-    def get_sort_key(vacancy):
+    def get_sort_key(vacancy) -> int:
         # Используем минимальную зарплату для сортировки
         salary_from = vacancy.get('salary_from') or 0
         salary_to = vacancy.get('salary_to') or 0
@@ -77,7 +78,7 @@ def sort_vacancies(vacancies: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         if salary_from == 0 and salary_to > 0:
             return salary_to
         return max(salary_from, salary_to)
-    
+
     return sorted(vacancies, key=get_sort_key, reverse=True)
 
 
@@ -99,13 +100,13 @@ def print_vacancies(vacancies: List[Dict[str, Any]]) -> None:
     if not vacancies:
         print("Вакансии не найдены.")
         return
-    
+
     for i, vacancy_data in enumerate(vacancies, 1):
         vacancy = Vacancy.from_dict(vacancy_data)
         print(f"\nВакансия #{i}")
         print("-" * 50)
         print(vacancy)
-    
+
     print(f"\nВсего найдено вакансий: {len(vacancies)}")
 
 

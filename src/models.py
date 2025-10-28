@@ -1,9 +1,9 @@
-from typing import Optional, Any, Dict, List
+from typing import Any, Dict, Optional
 
 
 class Vacancy:
     """Класс для представления вакансии"""
-    
+
     def __init__(
         self,
         name: str,
@@ -25,36 +25,36 @@ class Vacancy:
         self.employer = employer
         self.experience = experience
         self.employment = employment
-        
+
         # Валидация данных при инициализации
         self._validate_salary()
         self._validate_url()
-        
-    def __eq__(self, other):
+
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, Vacancy):
             return False
         return self.name == other.name and self.url == other.url
-        
-    def __lt__(self, other):
+
+    def __lt__(self, other: object) -> bool:
         if not isinstance(other, Vacancy):
             return NotImplemented
         return (self.name, self.url) < (other.name, other.url)
-        
-    def __hash__(self):
+
+    def __hash__(self) -> int:
         return hash((self.name, self.url))
-    
+
     def _validate_salary(self) -> None:
         """Проверка корректности данных о зарплате"""
         if self.salary_from is not None and not isinstance(self.salary_from, (int, float)):
             raise ValueError("Зарплата 'от' должна быть числом")
         if self.salary_to is not None and not isinstance(self.salary_to, (int, float)):
             raise ValueError("Зарплата 'до' должна быть числом")
-    
+
     def _validate_url(self) -> None:
         """Проверка корректности URL"""
         if not isinstance(self.url, str) or not self.url.startswith(('http://', 'https://')):
             raise ValueError("Некорректный URL вакансии")
-    
+
     @property
     def salary(self) -> str:
         """Возвращает отформатированную строку с зарплатой"""
@@ -65,7 +65,7 @@ class Vacancy:
         elif self.salary_to is not None:
             return f"до {self.salary_to:,} {self.salary_currency or ''}".replace(',', ' ')
         return "Зарплата не указана"
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Vacancy':
         """Создает экземпляр Vacancy из словаря"""
@@ -80,7 +80,7 @@ class Vacancy:
             experience=data.get('experience'),
             employment=data.get('employment')
         )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Возвращает словарь с данными вакансии"""
         return {
@@ -94,7 +94,7 @@ class Vacancy:
             'experience': self.experience,
             'employment': self.employment
         }
-    
+
     def __str__(self) -> str:
         """Строковое представление вакансии"""
         return (
