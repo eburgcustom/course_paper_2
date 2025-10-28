@@ -56,7 +56,7 @@ class JSONStorage(Storage):
     def _write_file(self, data: List[Dict[str, Any]]) -> None:
         """Запись данных в файл"""
         with open(self._filename, 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=2)
+            json.dump(data, file, ensure_ascii=False, indent=4)
     
     def add_vacancy(self, vacancy: Vacancy) -> None:
         """Добавление вакансии в файл"""
@@ -67,7 +67,7 @@ class JSONStorage(Storage):
         vacancy_dict = vacancy.to_dict()
 
         # Генерируем ID, если его нет
-        if '_id' not in vacancy_dict:
+        if 'id' not in vacancy_dict:
             import uuid
             vacancy_dict['id'] = str(uuid.uuid4())
         
